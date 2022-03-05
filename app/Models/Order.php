@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends Model
 {
-    public function customer()
+    use SoftDeletes;
+
+    public function customers()
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Customer::class);
     }
 }
