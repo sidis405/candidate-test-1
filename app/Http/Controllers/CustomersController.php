@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class CustomersController extends Controller
 {
@@ -35,6 +37,7 @@ class CustomersController extends Controller
      */
     public function store(Request $request)
     {
+        // TODO: add validation rules here before inserting
         $customer = Customer::create($request->all());
 
         return redirect()->route('customers.edit', $customer)->withMessage('Customer created successfully.');
@@ -43,8 +46,8 @@ class CustomersController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Customer $customer
+     * @return View
      */
     public function edit(Customer $customer)
     {
@@ -73,7 +76,16 @@ class CustomersController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        $customer->delete();
+        DB::beginTransaction();
+        try {
+            $customer->delete();
+            $customer->orders()->delete();
+            $customer->contracts()->delete();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withMessage('Something went wrong');
+        }
 
         return redirect()->route('customers.index')->withMessage('Customer deleted successfully');
     }

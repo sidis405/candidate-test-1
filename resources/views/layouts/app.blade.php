@@ -37,7 +37,7 @@
                             <a class="nav-link" href="{{ route('customers.index') }}">Customers</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Orders</a>
+                            <a class="nav-link" href="{{ route('orders.index') }}">Orders</a>
                         </li>
                     </ul>
 
@@ -81,6 +81,9 @@
             <div class="container">
                 @if(session('message'))
                     <div class="alert alert-success">{{ session('message') }}</div>
+                @endif
+                @if(session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
                 @endif
                 @yield('content')
             </div>

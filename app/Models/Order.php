@@ -9,8 +9,20 @@ class Order extends Model
 {
     use SoftDeletes;
 
-    public function customers()
+    protected $fillable = ['customer_id', 'title', 'description', 'cost'];
+
+    public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
+    public function contract()
+    {
+        return $this->hasOne(Contract::class);
     }
 }
